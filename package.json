@@ -1,0 +1,18 @@
+{
+  "name": "atom-tts",
+  "main": "./lib/atom-tts",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "atom-tts:toggle"
+  },
+  "repository": "https://github.com/joecox/atom-tts",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=0.174.0 <2.0.0"
+  },
+  "dependencies": {
+  }
+}
