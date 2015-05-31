@@ -6,7 +6,7 @@ Selector    = require './selector'
 speaker  = new TextSpeaker
 selector = new Selector
 
-module.exports = AtomTts =
+module.exports = AtomTTS =
   atomTtsView: null
   modalPanel: null
   subscriptions: null
@@ -18,8 +18,9 @@ module.exports = AtomTts =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-text-editor',
       'atom-tts:speak': =>
-        selection = selector.getSelection()
-        speaker.speak(selection)
+        unless speaker.stop()
+          selection = selector.getSelection()
+          speaker.speak(selection)
 
     console.log 'AtomTTS loaded'
 

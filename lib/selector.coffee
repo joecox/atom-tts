@@ -8,4 +8,4 @@ class Selector
 
   getSelection: ->
     editor = atom.workspace.getActiveTextEditor()
-    return editor?.getSelectedText()
+    editor?.getSelectedText()
