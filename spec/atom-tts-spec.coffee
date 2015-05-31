@@ -12,7 +12,7 @@ describe "AtomTts", ->
     workspaceElement = atom.views.getView(atom.workspace)
     activationPromise = atom.packages.activatePackage('atom-tts')
 
-  describe "when the atom-tts:toggle event is triggered", ->
+  describe "when the atom-tts:speak event is triggered", ->
     it "hides and shows the modal panel", ->
       # Before the activation event the view is not on the DOM, and no panel
       # has been created
@@ -20,7 +20,7 @@ describe "AtomTts", ->
 
       # This is an activation event, triggering it will cause the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'atom-tts:toggle'
+      atom.commands.dispatch workspaceElement, 'atom-tts:speak'
 
       waitsForPromise ->
         activationPromise
@@ -33,7 +33,7 @@ describe "AtomTts", ->
 
         atomTtsPanel = atom.workspace.panelForItem(atomTtsElement)
         expect(atomTtsPanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'atom-tts:toggle'
+        atom.commands.dispatch workspaceElement, 'atom-tts:speak'
         expect(atomTtsPanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
@@ -49,7 +49,7 @@ describe "AtomTts", ->
 
       # This is an activation event, triggering it causes the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'atom-tts:toggle'
+      atom.commands.dispatch workspaceElement, 'atom-tts:speak'
 
       waitsForPromise ->
         activationPromise
@@ -58,5 +58,5 @@ describe "AtomTts", ->
         # Now we can test for view visibility
         atomTtsElement = workspaceElement.querySelector('.atom-tts')
         expect(atomTtsElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'atom-tts:toggle'
+        atom.commands.dispatch workspaceElement, 'atom-tts:speak'
         expect(atomTtsElement).not.toBeVisible()

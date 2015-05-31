@@ -1,13 +1,10 @@
 {
   "name": "atom-tts",
   "main": "./lib/atom-tts",
-  "version": "0.0.0",
-  "description": "A short description of your package",
+  "version": "1.0.0",
+  "description": "Speak selections of your code using the system text-to-speech",
   "keywords": [
   ],
-  "activationCommands": {
-    "atom-workspace": "atom-tts:toggle"
-  },
   "repository": "https://github.com/joecox/atom-tts",
   "license": "MIT",
   "engines": {

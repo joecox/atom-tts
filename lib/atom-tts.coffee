@@ -1,5 +1,10 @@
-AtomTtsView = require './atom-tts-view'
 {CompositeDisposable} = require 'atom'
+
+TextSpeaker = require './text-speaker'
+Selector    = require './selector'
+
+speaker  = new TextSpeaker
+selector = new Selector
 
 module.exports = AtomTts =
   atomTtsView: null
@@ -7,28 +12,22 @@ module.exports = AtomTts =
   subscriptions: null
 
   activate: (state) ->
-    @atomTtsView = new AtomTtsView(state.atomTtsViewState)
-    @modalPanel = atom.workspace.addModalPanel(item: @atomTtsView.getElement(), visible: false)
-
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-tts:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-text-editor',
+      'atom-tts:speak': =>
+        selection = selector.getSelection()
+        speaker.speak(selection)
+
+    console.log 'AtomTTS loaded'
 
   deactivate: ->
     # Need to release `say` process here...maybe
-    @modalPanel.destroy()
+    # @modalPanel.destroy()
     @subscriptions.dispose()
-    @atomTtsView.destroy()
+    # @atomTtsView.destroy()
 
   serialize: ->
-    atomTtsViewState: @atomTtsView.serialize()
-
-  toggle: ->
-    console.log 'AtomTts was toggled!'
-
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      @modalPanel.show()
+    # atomTtsViewState: @atomTtsView.serialize()

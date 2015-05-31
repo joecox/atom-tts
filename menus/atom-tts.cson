@@ -2,10 +2,11 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle atom-tts'
-      'command': 'atom-tts:toggle'
+      'label': 'Speak text'
+      'command': 'atom-tts:speak'
     }
   ]
+# Do we need this?
 'menu': [
   {
     'label': 'Packages'
@@ -13,8 +14,8 @@
       'label': 'atom-tts'
       'submenu': [
         {
-          'label': 'Toggle'
-          'command': 'atom-tts:toggle'
+          'label': 'Speak text'
+          'command': 'atom-tts:speak'
         }
       ]
     ]
