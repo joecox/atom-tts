@@ -3,13 +3,13 @@
   "main": "./lib/atom-tts",
   "version": "1.0.0",
   "description": "Speak selections of your code using the system text-to-speech",
-  "keywords": [
-  ],
+  "keywords": [],
   "repository": "https://github.com/joecox/atom-tts",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
+    "esprima": "^2.2.0"
   }
 }

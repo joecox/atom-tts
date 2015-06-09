@@ -1,10 +1,12 @@
 {CompositeDisposable} = require 'atom'
 
-TextSpeaker = require './text-speaker'
+TextSpeaker = require './speaker'
 Selector    = require './selector'
+Parser      = require './parser'
 
 speaker  = new TextSpeaker
 selector = new Selector
+parser   = new Parser
 
 module.exports = AtomTTS =
   atomTtsView: null
@@ -17,15 +19,26 @@ module.exports = AtomTTS =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-text-editor',
+      # 'atom-tts:speak': =>
+      #   unless speaker.stop()
+      #     selection = selector.getSelection()
+      #     speaker.speak(selection)
+      # 'atom-tts:add': =>
+      #   selection = selector.getSelection()
+      #   if selection
+      #     editor = atom.workspace.getActiveTextEditor()
+      #     range = editor.getSelectedBufferRange()
+      #     marker = editor.markBufferRange(range)
+      #     decoration = editor.decorateMarker(marker, {type: 'overlay', item: new SearchView().getElement(), position: 'tail'})
       'atom-tts:speak': =>
         unless speaker.stop()
-          selection = selector.getSelection()
-          speaker.speak(selection)
+          speaker.speak(parser.getText())
+
+    parser.bindParseEvent()
 
     console.log 'AtomTTS loaded'
 
   deactivate: ->
-    # Need to release `say` process here...maybe
     # @modalPanel.destroy()
     @subscriptions.dispose()
     # @atomTtsView.destroy()

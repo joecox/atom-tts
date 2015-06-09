@@ -7,5 +7,7 @@
 
 # For more detailed documentation see
 # https://atom.io/docs/latest/behind-atom-keymaps-in-depth
-'atom-workspace':
+'atom-text-editor':
   'ctrl-alt-cmd-space': 'atom-tts:speak'
+  # 'ctrl-alt-cmd-space a': 'atom-tts:add'
+  # 'ctrl-alt-cmd-space p': 'atom-tts:parse'

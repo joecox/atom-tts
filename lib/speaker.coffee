@@ -26,3 +26,11 @@ class TextSpeaker
     if @active
       @process?.kill()
       return 1
+
+  # Naive - will replace 'tts' substring regardless of context
+  # Example - watts will be spoken as "wa text to speech"
+  # replaceAbbreviations: (text) ->
+  #   for abbrev, expand of @abbreviations
+  #     text = text.replace(abbrev, expand)
+  #
+  #   return text
