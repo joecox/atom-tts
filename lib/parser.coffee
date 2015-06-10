@@ -53,8 +53,8 @@ class Parser
         @unsupported()
       when 'SwitchStatement'
         text = 'switch on ' + @astToText(ast.discriminant) + ' '
-        text += @astToText(switchCase) + ' ' for switchCase in ast.cases
-      when 'ReturnStatment'
+        text += @astToText(switchCase) + ', ' for switchCase in ast.cases
+      when 'ReturnStatement'
         if ast.argument
           text = 'return ' + @astToText(ast.argument)
         else
@@ -64,53 +64,76 @@ class Parser
       when 'TryStatement'
         @unsupported()
       when 'WhileStatement'
-        @unsupported()
+        text = 'while ' + @astToText(ast.test) + ', '
+        text += @astToText(ast.body)
       when 'DoWhileStatement'
-        @unsupported()
+        text = 'do ' + @astToText(ast.body)
+        text += ', while ' + @astToText(ast.test)
       when 'ForStatement'
-        @unsupported()
+        text = 'for '
+        if (ast.init)
+          text += @astToText(ast.init) + ', '
+        else
+          text += 'no initialization, '
+        if (ast.test)
+          text += @astToText(ast.test) + ', '
+        else
+          text += 'no test, '
+        if (ast.update)
+          text += @astToText(ast.update) + ', '
+        else
+          text += 'no update, '
+        text += @astToText(ast.body)
       when 'ForInStatement'
-        @unsupported()
+        text = 'for ' + @astToText(ast.left) + ' in ' + @astToText(ast.right) + ', '
+        text += @astToText(ast.body)
       when 'DebuggerStatement'
         @unsupported()
       # when 'Declaration'
-      when 'FunctionDeclaration'
-        @unsupported()
+      when 'FunctionDeclaration', 'FunctionExpression'
+        if (ast.id)
+          text = 'function ' + @astToText(ast.id)
+        else
+          text = 'function '
+        if (ast.params.length)
+          text += ' with parameters '
+          text += @astToText(param) + ', ' for param in ast.params
+        text += @astToText(ast.body)
       when 'VariableDeclaration'
-        @unsupported()
+        if (ast.declarations > 1)
+          text = 'vars '
+        else
+          text = 'var '
+        text += @astToText(decl) + ', ' for decl in ast.declarations
       when 'VariableDeclarator'
-        @unsupported()
+        text = @astToText(ast.id)
+        if (ast.init)
+          text += ' equals ' + @astToText(ast.init)
       # when 'Expression'
       when 'ThisExpression'
-        @unsupported()
+        text = 'this'
       when 'ArrayExpression'
-        @unsupported()
+        text = 'array with elements '
+        text += @astToText(elem) + ', ' for elem in ast.elements
       when 'ObjectExpression'
-        @unsupported()
+        text = 'object with pairs '
+        text += @astToText(prop)  + ', ' for prop in ast.properties
       when 'Property'
-        @unsupported()
-      when 'FunctionExpression'
-        @unsupported()
+        text = 'key: ' + @astToText(ast.key) + ', value: ' + @astToText(ast.value)
       when 'SequenceExpression'
-        @unsupported()
-      when 'UnaryExpression'
-        @unsupported()
-      when 'BinaryExpression'
-        @unsupported()
-      when 'AssignmentExpression'
-        @unsupported()
-      when 'UpdateExpression'
+        text = @astToText(expr) + ', ' for expr in ast.expressions
+      when 'BinaryExpression', 'AssignmentExpression', 'LogicalExpression'
+        text = @astToText(ast.left) + ' ' + @opToText(ast.operator) + ' ' + @astToText(ast.right)
+      when 'UnaryOperator', 'UpdateExpression'
         if ast.prefix
           text = @opToText(ast.operator) + ' ' + @astToText(ast.argument)
         else
           text = @astToText(ast.argument) + ' ' + @opToText(ast.operator)
-      when 'LogicalExpression'
-        text = @astToText(ast.left) + ' ' + @opToText(ast.operator) + ' ' + @astToText(right)
       when 'ConditionalExpression'
         text = @astToText(ast.consequent) + ', if ' + @astToText(ast.test) + ', '
         text += ', otherwise ' + @astToText(ast.alternate)
       when 'CallExpression'
-        text = 'invocation of ' + @astToText(ast.callee)
+        text = @astToText(ast.callee)
         if (ast.arguments.length)
           text += ' with parameters '
           text += @astToText(param) + ', ' for param in ast.arguments
@@ -120,15 +143,18 @@ class Parser
           text += ' with parameters '
           text += @astToText(param) + ', ' for param in ast.arguments
       when 'MemberExpression'
-        @unsupported()
-      when 'Pattern'
-        @unsupported() # -- ES6 feature, unsupported
+        if (ast.computed)
+          text = 'member ' + @astToText(ast.property) + ' of ' + @astToText(ast.object)
+        else
+          text = @astToText(ast.object) + ' dot ' + @astToText(ast.property)
+      # when 'Pattern'
+        # @unsupported() # -- In ES5, only subtype is Identifier
       when 'SwitchCase'
         if ast.test
           text = 'case ' + @astToText(ast.test)
         else
           text = 'default case '
-        text += @astToText(stmt) for stmt in ast.consequent + ' '
+        text += @astToText(stmt) + ', ' for stmt in ast.consequent
       when 'CatchClause'
         @unsupported()
       when 'Identifier'
@@ -148,7 +174,9 @@ class Parser
       # when 'UpdateOperator'
       #   @unsupported()
       when 'EmptyStatement'
-      else throw Error 'unknown or unsupported node type ' + ast.type
+        ;
+      else
+        throw Error 'unknown or unsupported node type ' + ast.type
     return text
 
   opToText: (op) ->
@@ -159,10 +187,8 @@ class Parser
       '/': 'divided by'
       '%': 'modulo'
       '!': 'not'
-      '~': ''
       '|': 'or'
       '||': 'or'
-      '^': ''
       '&': 'and'
       '&&': 'and'
       '++': 'plus plus'
@@ -189,6 +215,10 @@ class Parser
       '*=': 'times equals'
       '/=': 'divide equals'
       '%=': 'modulo equals'
+
+      # -- Unsupported operators (how do we speak these?)
+      '~': ''
+      '^': ''
       '<<=': ''
       '>>=': ''
       '>>>=': ''
