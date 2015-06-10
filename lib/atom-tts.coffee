@@ -6,7 +6,6 @@ Parser      = require './parser'
 
 speaker  = new TextSpeaker
 selector = new Selector
-parser   = new Parser
 
 module.exports = AtomTTS =
   atomTtsView: null
@@ -14,6 +13,8 @@ module.exports = AtomTTS =
   subscriptions: null
 
   activate: (state) ->
+    @parser = new Parser
+
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
@@ -32,9 +33,9 @@ module.exports = AtomTTS =
       #     decoration = editor.decorateMarker(marker, {type: 'overlay', item: new SearchView().getElement(), position: 'tail'})
       'atom-tts:speak': =>
         unless speaker.stop()
-          speaker.speak(parser.getText())
+          speaker.speak(@parser.getText())
 
-    parser.bindParseEvent()
+    @parser.bindParseEvent()
 
     console.log 'AtomTTS loaded'
 
