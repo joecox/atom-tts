@@ -2,7 +2,7 @@
   "name": "atom-tts",
   "main": "./lib/atom-tts",
   "version": "0.1.0",
-  "description": "Speak selections of your code using the system text-to-speech",
+  "description": "Have your code spoken intelligently with regard to program structure.",
   "keywords": [],
   "repository": "https://github.com/joecox/atom-tts",
   "license": "MIT",
