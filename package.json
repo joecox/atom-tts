@@ -1,7 +1,7 @@
 {
   "name": "atom-tts",
   "main": "./lib/atom-tts",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Speak selections of your code using the system text-to-speech",
   "keywords": [],
   "repository": "https://github.com/joecox/atom-tts",
